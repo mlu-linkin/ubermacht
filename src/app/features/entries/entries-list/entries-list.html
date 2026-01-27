@@ -1,0 +1,62 @@
+<div class="entries-container">
+  <div class="header">
+    <h2>Decision Log Entries</h2>
+  </div>
+
+  <!-- Loading spinner -->
+  <div *ngIf="loading$ | async" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading entries...</p>
+  </div>
+
+  <!-- Entries list -->
+  <div *ngIf="!(loading$ | async)" class="entries-list">
+    <mat-card 
+      *ngFor="let entry of entries$ | async" 
+      class="entry-card"
+      [class.selected]="entry.id === (selectedEntryId$ | async)"
+      (click)="onSelectEntry(entry.id)">
+      
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>{{ getStatusIcon(entry.status) }}</mat-icon>
+          {{ entry.title }}
+        </mat-card-title>
+        <mat-card-subtitle>
+          {{ formatDate(entry.createdAt) }}
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="entry-meta">
+          <mat-chip-set>
+            <mat-chip [color]="getCategoryColor(entry.category)" highlighted>
+              {{ entry.category }}
+            </mat-chip>
+            <mat-chip>{{ entry.status }}</mat-chip>
+          </mat-chip-set>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Empty state -->
+    <div *ngIf="(entries$ | async)?.length === 0" class="empty-state">
+      <mat-icon>inbox</mat-icon>
+      <p>No entries yet. Start documenting your decisions!</p>
+    </div>
+  </div>
+
+  <!-- Selected entry detail (placeholder) -->
+  <mat-card *ngIf="selectedEntryId$ | async" class="selected-detail">
+    <mat-card-header>
+      <mat-card-title>Selected Entry</mat-card-title>
+      <button mat-icon-button (click)="onDeselectEntry()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+    <mat-card-content>
+      <p>Entry ID: {{ selectedEntryId$ | async }}</p>
+      <p><em>Detail view will be built in Phase 4</em></p>
+    </mat-card-content>
+  </mat-card>
+</div>
