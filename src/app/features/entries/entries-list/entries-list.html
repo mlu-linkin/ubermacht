@@ -1,6 +1,10 @@
 <div class="entries-container">
   <div class="header">
     <h2>Decision Log Entries</h2>
+    <button mat-raised-button color="primary" (click)="onCreateNew()">
+      <mat-icon>add</mat-icon>
+      New Entry
+    </button>
   </div>
 
   <!-- Loading spinner -->
@@ -11,12 +15,12 @@
 
   <!-- Entries list -->
   <div *ngIf="!(loading$ | async)" class="entries-list">
-    <mat-card 
-      *ngFor="let entry of entries$ | async" 
+    <mat-card
+      *ngFor="let entry of entries$ | async"
       class="entry-card"
       [class.selected]="entry.id === (selectedEntryId$ | async)"
-      (click)="onSelectEntry(entry.id)">
-      
+      (click)="onSelectEntry(entry.id)"
+    >
       <mat-card-header>
         <mat-card-title>
           <mat-icon>{{ getStatusIcon(entry.status) }}</mat-icon>
@@ -37,6 +41,13 @@
           </mat-chip-set>
         </div>
       </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button mat-button color="primary" (click)="onEditEntry(entry.id, $event)">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+      </mat-card-actions>
     </mat-card>
 
     <!-- Empty state -->

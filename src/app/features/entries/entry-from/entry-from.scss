@@ -1,0 +1,47 @@
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+mat-card {
+  mat-card-content {
+    padding: 24px;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.debug-panel {
+  margin-top: 32px;
+  padding: 16px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  font-size: 12px;
+
+  h4 {
+    margin: 0 0 12px 0;
+    color: #666;
+  }
+
+  pre {
+    margin: 8px 0 0 0;
+    padding: 12px;
+    background: white;
+    border-radius: 4px;
+    overflow-x: auto;
+  }
+}

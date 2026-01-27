@@ -4,14 +4,22 @@
 }
 
 .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 24px;
 
   h2 {
     margin: 0;
     font-weight: 400;
   }
-}
 
+  button {
+    mat-icon {
+      margin-right: 4px;
+    }
+  }
+}
 .loading-container {
   display: flex;
   flex-direction: column;

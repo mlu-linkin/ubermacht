@@ -1,0 +1,47 @@
+<div class="form-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ pageTitle }}</mat-card-title>
+      <mat-card-subtitle *ngIf="mode === 'edit' && model">
+        Last modified: {{ model.createdAt | date: 'short' }}
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- This is the entire form - no manual field HTML! -->
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <formly-form [form]="form" [fields]="fields" [model]="formModel"> </formly-form>
+
+        <div class="form-actions">
+          <button mat-raised-button type="button" (click)="onCancel()" [disabled]="isSubmitting">
+            Cancel
+          </button>
+
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="!isValid || isSubmitting"
+          >
+            <mat-spinner
+              *ngIf="isSubmitting"
+              diameter="20"
+              style="display: inline-block; margin-right: 8px"
+            >
+            </mat-spinner>
+            {{ submitButtonText }}
+          </button>
+        </div>
+      </form>
+
+      <!-- Debug panel (remove in production) -->
+      <div class="debug-panel" *ngIf="!isSubmitting">
+        <h4>Form Debug Info</h4>
+        <p><strong>Mode:</strong> {{ mode }}</p>
+        <p><strong>Valid:</strong> {{ form.valid }}</p>
+        <p><strong>Model:</strong></p>
+        <pre>{{ formModel | json }}</pre>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
