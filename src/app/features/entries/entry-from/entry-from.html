@@ -10,10 +10,19 @@
     <mat-card-content>
       <!-- This is the entire form - no manual field HTML! -->
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <formly-form [form]="form" [fields]="fields" [model]="formModel"> </formly-form>
+        <formly-form 
+          [form]="form" 
+          [fields]="fields" 
+          [model]="formModel"
+          [options]="options">
+        </formly-form>
 
         <div class="form-actions">
-          <button mat-raised-button type="button" (click)="onCancel()" [disabled]="isSubmitting">
+          <button 
+            mat-raised-button 
+            type="button" 
+            (click)="onCancel()" 
+            [disabled]="isSubmitting">
             Cancel
           </button>
 
@@ -23,13 +32,15 @@
             type="submit"
             [disabled]="!isValid || isSubmitting"
           >
+            <!-- Show spinner when submitting -->
             <mat-spinner
               *ngIf="isSubmitting"
               diameter="20"
               style="display: inline-block; margin-right: 8px"
             >
             </mat-spinner>
-            {{ submitButtonText }}
+            <span *ngIf="!isSubmitting">{{ submitButtonText }}</span>
+            <span *ngIf="isSubmitting">{{ submitButtonText }}ing...</span>
           </button>
         </div>
       </form>

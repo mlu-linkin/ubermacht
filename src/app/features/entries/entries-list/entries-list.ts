@@ -83,4 +83,14 @@ export class EntriesListComponent implements OnInit {
     event.stopPropagation(); // Prevent card selection
     this.router.navigate(['/entries', entryId, 'edit']);
   }
+
+  getContentPreview(content: string): string {
+    // Strip HTML tags for preview
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = content;
+    const text = tempDiv.textContent || tempDiv.innerText || '';
+
+    // Truncate to 150 characters
+    return text.length > 150 ? text.substring(0, 150) + '...' : text;
+  }
 }

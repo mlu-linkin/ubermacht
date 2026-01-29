@@ -3,5 +3,6 @@ export interface Entry {
   title: string;
   category: 'Decision' | 'Note' | 'Proposal';
   status: 'Draft' | 'Final';
+  content: string;
   createdAt: string;
 }

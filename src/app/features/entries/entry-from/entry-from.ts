@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormGroup } from '@angular/forms';
-import { FormlyModule, FormlyFieldConfig } from '@ngx-formly/core';
+import { FormlyModule, FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { Store } from '@ngxs/store';
 
@@ -12,6 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { Entry } from '../../../models/entry.model';
 import { AddEntry, UpdateEntry } from '../../../store/actions/entries.actions';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-entry-form',
@@ -35,11 +36,13 @@ export class EntryFormComponent implements OnInit {
   form = new FormGroup({});
   formModel: any = {};
   fields: FormlyFieldConfig[] = [];
+  options: FormlyFormOptions = {};
   isSubmitting = false;
 
   constructor(
     private store: Store,
     private router: Router,
+    private notification: NotificationService,
   ) {}
 
   ngOnInit() {
@@ -53,12 +56,14 @@ export class EntryFormComponent implements OnInit {
         title: this.model.title,
         category: this.model.category,
         status: this.model.status,
+        content: this.model.content, // NEW - rehydrate content
       };
     } else {
       this.formModel = {
         title: '',
         category: 'Note',
         status: 'Draft',
+        content: '', // NEW - empty content for new entries
       };
     }
 
@@ -99,7 +104,6 @@ export class EntryFormComponent implements OnInit {
           ],
         },
         expressions: {
-          // Conditional: disable status when creating new entry
           'props.disabled': (field) => this.mode === 'create',
         },
         hooks: {
@@ -110,17 +114,34 @@ export class EntryFormComponent implements OnInit {
           },
         },
       },
+      // NEW - Content field using custom CKEditor type
+      {
+        key: 'content',
+        type: 'ckeditor',
+        props: {
+          label: 'Content',
+          required: true,
+        },
+      },
     ];
   }
 
   onSubmit() {
+    // Validate form
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.notification.showError('Please fill in all required fields');
+      return;
+    }
+
+    // Prevent double-submit
+    if (this.isSubmitting) {
       return;
     }
 
     this.isSubmitting = true;
 
+    // Dispatch action with proper error handling
     if (this.mode === 'create') {
       // Dispatch AddEntry action
       this.store
@@ -129,15 +150,19 @@ export class EntryFormComponent implements OnInit {
             title: this.formModel.title,
             category: this.formModel.category,
             status: this.formModel.status,
+            content: this.formModel.content
           }),
         )
         .subscribe({
           next: () => {
             this.isSubmitting = false;
+            this.notification.showSuccess('Entry created successfully');
             this.router.navigate(['/entries']);
           },
-          error: () => {
+          error: (error) => {
             this.isSubmitting = false;
+            console.error('Failed to create entry:', error);
+            this.notification.showError('Failed to create entry. Please try again.');
           },
         });
     } else if (this.mode === 'edit' && this.model) {
@@ -148,15 +173,19 @@ export class EntryFormComponent implements OnInit {
             title: this.formModel.title,
             category: this.formModel.category,
             status: this.formModel.status,
+            content: this.formModel.content
           }),
         )
         .subscribe({
           next: () => {
             this.isSubmitting = false;
+            this.notification.showSuccess('Entry updated successfully');
             this.router.navigate(['/entries']);
           },
-          error: () => {
+          error: (error) => {
             this.isSubmitting = false;
+            console.error('Failed to update entry:', error);
+            this.notification.showError('Failed to update entry. Please try again.');
           },
         });
     }

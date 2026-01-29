@@ -40,6 +40,8 @@
             <mat-chip>{{ entry.status }}</mat-chip>
           </mat-chip-set>
         </div>
+
+        <div class="content-preview" [innerHTML]="getContentPreview(entry.content)"></div>
       </mat-card-content>
 
       <mat-card-actions align="end">

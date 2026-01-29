@@ -1,0 +1,26 @@
+.ckeditor-field {
+  margin: 16px 0;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.required-marker {
+  color: #f44336;
+  margin-left: 4px;
+}
+
+::ng-deep .ck-editor__editable {
+  min-height: 300px;
+}
+
+.error-message {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #f44336;
+}

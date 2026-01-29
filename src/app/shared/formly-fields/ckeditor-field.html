@@ -1,0 +1,19 @@
+<div class="ckeditor-field">
+  <label *ngIf="props.label">
+    {{ props.label }}
+    <span *ngIf="props.required" class="required-marker">*</span>
+  </label>
+
+  <ckeditor
+    [editor]="Editor"
+    [config]="editorConfig"
+    [formControl]="formControl"
+    (blur)="onBlur()">
+  </ckeditor>
+
+  <div class="error-message" *ngIf="showError">
+    <ng-container *ngFor="let error of formControl.errors | keyvalue">
+      {{ error.key === 'required' ? 'This field is required' : error.value }}
+    </ng-container>
+  </div>
+</div>
