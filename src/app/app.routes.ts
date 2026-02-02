@@ -27,6 +27,12 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'entries/:id',
+        loadComponent: () => 
+          import('./features/entries/view-entry/view-entry')
+            .then(m => m.ViewEntryComponent)
+      },
+      {
         path: 'entries/:id/edit',
         loadComponent: () =>
           import('./features/entries/edit-entry/edit-entry').then(

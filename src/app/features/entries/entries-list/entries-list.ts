@@ -93,4 +93,8 @@ export class EntriesListComponent implements OnInit {
     // Truncate to 150 characters
     return text.length > 150 ? text.substring(0, 150) + '...' : text;
   }
+
+  onViewEntry(entryId: string) {
+    this.router.navigate(['/entries', entryId]);
+  }
 }

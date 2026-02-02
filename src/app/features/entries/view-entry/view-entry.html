@@ -1,0 +1,52 @@
+<div class="view-container" *ngIf="entry$ | async as entry; else loading">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <div class="title-row">
+          <h1>{{ entry.title }}</h1>
+          <button mat-icon-button (click)="onEdit(entry.id)" aria-label="Edit entry">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </mat-card-title>
+      <mat-card-subtitle>
+        <div class="metadata">
+          <mat-chip-set>
+            <mat-chip [color]="getCategoryColor(entry.category)" highlighted>
+              {{ entry.category }}
+            </mat-chip>
+            <mat-chip>{{ entry.status }}</mat-chip>
+          </mat-chip-set>
+          <span class="date">{{ formatDate(entry.createdAt) }}</span>
+        </div>
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- 
+        CRITICAL: innerHTML renders HTML from CKEditor
+        For production: Use DomSanitizer (see note below)
+        For Phase 5.2: Direct innerHTML to prove it works
+      -->
+      <div class="content" [innerHTML]="entry.content"></div>
+    </mat-card-content>
+
+    <mat-card-actions align="start">
+      <button mat-button (click)="onBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Back to List
+      </button>
+      <button mat-raised-button color="primary" (click)="onEdit(entry.id)">
+        <mat-icon>edit</mat-icon>
+        Edit Entry
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<ng-template #loading>
+  <div class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading entry...</p>
+  </div>
+</ng-template>
