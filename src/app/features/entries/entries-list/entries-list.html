@@ -16,32 +16,32 @@
   <!-- Entries list -->
   <div *ngIf="!(loading$ | async)" class="entries-list">
     <mat-card
-      *ngFor="let entry of entries$ | async"
+      *ngFor="let entry of entriesViewModel$ | async; trackBy: trackById"
       class="entry-card"
       [class.selected]="entry.id === (selectedEntryId$ | async)"
-      (click)="onSelectEntry(entry.id)"
+      (click)="onViewEntry(entry.id)"
     >
       <mat-card-header>
         <mat-card-title>
-          <mat-icon>{{ getStatusIcon(entry.status) }}</mat-icon>
+          <mat-icon>{{ entry.statusIcon }}</mat-icon>
           {{ entry.title }}
         </mat-card-title>
         <mat-card-subtitle>
-          {{ formatDate(entry.createdAt) }}
+          {{ entry.displayDate }}
         </mat-card-subtitle>
       </mat-card-header>
 
       <mat-card-content>
         <div class="entry-meta">
           <mat-chip-set>
-            <mat-chip [color]="getCategoryColor(entry.category)" highlighted>
+            <mat-chip [color]="entry.categoryColor" highlighted>
               {{ entry.category }}
             </mat-chip>
             <mat-chip>{{ entry.status }}</mat-chip>
           </mat-chip-set>
         </div>
 
-        <div class="content-preview" [innerHTML]="getContentPreview(entry.content)"></div>
+        <div class="content-preview"><p>{{ entry.preview }}</p></div>
       </mat-card-content>
 
       <mat-card-actions align="end">
@@ -53,7 +53,7 @@
     </mat-card>
 
     <!-- Empty state -->
-    <div *ngIf="(entries$ | async)?.length === 0" class="empty-state">
+    <div *ngIf="(entriesViewModel$ | async)?.length === 0" class="empty-state">
       <mat-icon>inbox</mat-icon>
       <p>No entries yet. Start documenting your decisions!</p>
     </div>

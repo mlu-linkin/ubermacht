@@ -6,3 +6,10 @@ export interface Entry {
   content: string;
   createdAt: string;
 }
+
+export interface EntryViewModel extends Entry {
+  displayDate: string;
+  categoryColor: string;
+  statusIcon: string;
+  preview: string;
+}

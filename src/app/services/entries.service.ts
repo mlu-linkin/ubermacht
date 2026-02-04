@@ -63,11 +63,17 @@ export class EntriesService {
 
   // Simulate updating an entry
   updateEntry(id: string, updates: Partial<Entry>): Observable<Entry> {
-    const entry = this.mockEntries.find((e) => e.id === id);
-    if (!entry) {
+    const index = this.mockEntries.findIndex((e) => e.id === id);
+    if (index === -1) {
       throw new Error('Entry not found');
     }
-    const updated = { ...entry, ...updates };
-    return of(updated).pipe(delay(300));
+    
+    // Update the mock data store
+    this.mockEntries[index] = {
+      ...this.mockEntries[index],
+      ...updates
+    };
+    
+    return of(this.mockEntries[index]).pipe(delay(300));
   }
 }

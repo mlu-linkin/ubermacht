@@ -3,7 +3,7 @@ import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { tap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
-import { Entry } from '../models/entry.model';
+import { Entry, EntryViewModel } from '../models/entry.model';
 import { EntriesService } from '../services/entries.service';
 import {
   LoadEntries,
@@ -60,6 +60,40 @@ export class EntriesState {
   static entriesByCategory(state: EntriesStateModel) {
     return (category: Entry['category']) => 
       state.entries.filter(e => e.category === category);
+  }
+
+  @Selector()
+  static entriesViewModel(state: EntriesStateModel): EntryViewModel[] {
+    const categoryColors: Record<Entry['category'], string> = {
+      Decision: 'primary',
+      Note: 'accent',
+      Proposal: 'warn',
+    };
+
+    return state.entries.map(entry => {
+      // Format date
+      const displayDate = new Date(entry.createdAt).toLocaleDateString();
+
+      // Get category color
+      const categoryColor = categoryColors[entry.category];
+
+      // Get status icon
+      const statusIcon = entry.status === 'Final' ? 'check_circle' : 'edit';
+
+      // Strip HTML tags using regex and truncate for preview
+      const textContent = entry.content.replace(/<[^>]*>/g, '');
+      const preview = textContent.length > 150 
+        ? textContent.substring(0, 150) + '...' 
+        : textContent;
+
+      return {
+        ...entry,
+        displayDate,
+        categoryColor,
+        statusIcon,
+        preview
+      };
+    });
   }
 
   // Actions - the only way to change state
